@@ -10,6 +10,7 @@ class GalaxyClassifier:
         self.file_list = file_list
         self.model = self.load_model(weights)
         self.classes = self.mode.names
+        #check device
         if torch.cuda.is_avalible():
             self.device = 'cuda'
             print("GPU enabled")
