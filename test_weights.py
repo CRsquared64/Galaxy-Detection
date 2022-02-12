@@ -20,7 +20,13 @@ class GalaxyClassifier:
 
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=weights, force_reload=True)
         return model
-    def score(self, frame):
+    def score(self, frame, x):
         self.model.to(self.device)
         frame = [frame]
-        results
+        results = self.model(frame)
+        labels, cord = results.xyxyn[0][:, -1], results.xyxyn[0][:, :-1]
+        return labels, cord, self.classes[int(x)]
+
+    def draw(self, results, frame):
+        labels, cord = results
+        n = len(labels)
