@@ -11,8 +11,10 @@ class GalaxyClassifier:
         self.file_list = file_list
         self.model = self.load_model(weights)
         self.classes = self.mode.names
-        #check device
-        if torch.cuda.is_avalible():
+
+    def load_model(self, weights):
+        # check device
+        if torch.cuda.is_available():
             self.device = 'cuda'
             print("GPU enabled")
         else:
@@ -56,3 +58,9 @@ class GalaxyClassifier:
             results = self.score(img)
             img = self.draw(results, img)
             cv.imshow("Detected", img)
+
+            if cv2.waitKey(5) & 0xFF ==27:
+                break
+
+
+detector = GalaxyClassifier(file_list='1.jpg', weights='we.pt')
