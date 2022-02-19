@@ -3,6 +3,7 @@ import torch.onnx
 import torchvision
 import torchvision.models as models
 import sys
+import platform
 
 
 class ConvertWeights:
@@ -15,10 +16,10 @@ class ConvertWeights:
 
         if torch.cuda.is_available():
             self.device = 'cuda'
-            print(f"Using GPU{torch.cuda.get_device_name(0)}")
+            print(f"Using GPU: {torch.cuda.get_device_name(0)}")
         else:
             self.device = 'cpu'
-            print("Using CPU")
+            print(f"Using CPU: {platform.processor()}")
 
     def load_model(self, weights):
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=weights)
