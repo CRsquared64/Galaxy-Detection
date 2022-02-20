@@ -33,5 +33,5 @@ class ConvertWeights:
 
 
 if __name__ == '__main__':
-    convert = ConvertWeights(weights='we.pt', output='Weights/conversion.onnx')
-    convert()
+    convertWeights = ConvertWeights(weights='we.pt', output='Weights/conversion.onnx')
+    convertWeights()
