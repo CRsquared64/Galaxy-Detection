@@ -29,6 +29,7 @@ class GalaxyClassifier:
         w = 412
         h = 412
         # reminder to self, put any modifications here Eg. stretch to 412
+
         return cv2.imread(self.file_list)
 
     def score(self, frame):
@@ -48,7 +49,8 @@ class GalaxyClassifier:
         y_shape = frame.shape[0]
         for i in range(n):
             row = cord[i]
-            if row[4] >= 0.2:
+            if row[4] >= 0.55:
+                print(row[4])
                 x1 = int(row[0] * x_shape)
                 y1 = int(row[1] * y_shape)
                 x2 = int(row[2] * x_shape)
@@ -61,13 +63,12 @@ class GalaxyClassifier:
     def __call__(self):
         img = self.get_img()
 
-        while True:
-            results = self.score(img)
-            img = self.draw(results, img)
-            cv.imwrite("Detected.jpg", img)
 
-            if cv2.waitKey(5) & 0xFF == 27:
-                break
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        results = self.score(img)
+        img = self.draw(results, img)
+        cv.imwrite("Detectedrgb.jpg", img)
+
 
 
 if __name__ == '__main__':
