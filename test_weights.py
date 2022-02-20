@@ -28,8 +28,7 @@ class GalaxyClassifier:
     def get_img(self):
         w = 412
         h = 412
-        # reminder to self, put any modifications here Eg. stretch to 412.
-        self.file_list = cv2.resize(self.file_list, (w, h))
+        # reminder to self, put any modifications here Eg. stretch to 412
         return cv2.imread(self.file_list)
 
     def score(self, frame):
@@ -72,5 +71,5 @@ class GalaxyClassifier:
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='100090.jpg', weights='we.pt')
+    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='we.pt')
     galaxyClassifier()
