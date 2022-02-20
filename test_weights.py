@@ -3,6 +3,7 @@ import torch
 import numpy
 import time
 import cv2 as cv
+import platform
 
 
 class GalaxyClassifier:
@@ -16,10 +17,10 @@ class GalaxyClassifier:
         # check device
         if torch.cuda.is_available():
             self.device = 'cuda'
-            print("GPU enabled")
+            print(f"Using GPU: {torch.cuda.get_device_name(0)}")
         else:
             self.device = 'cpu'
-            print("Using CPU")
+            print(f"Using CPU: {platform.processor()}")
 
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=weights, force_reload=True)
         return model
@@ -64,5 +65,7 @@ class GalaxyClassifier:
                 break
 
 
-detector = GalaxyClassifier(file_list='100090.jpg', weights='we.pt')
-detector()
+if __name__ == '__main__':
+    galaxyClassifier = GalaxyClassifier(file_list='100090.jpg', weights='we.pt')
+    galaxyClassifier()
+
