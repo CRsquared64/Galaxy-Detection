@@ -26,7 +26,12 @@ class GalaxyClassifier:
         return model
 
     def get_img(self):
+        w = 412
+        h = 412
+        # reminder to self, put any modifications here Eg. stretch to 412.
+        self.file_list = cv2.resize(self.file_list, (w, h))
         return cv2.imread(self.file_list)
+
     def score(self, frame):
         self.model.to(self.device)
         frame = [frame]
@@ -45,14 +50,15 @@ class GalaxyClassifier:
         for i in range(n):
             row = cord[i]
             if row[4] >= 0.2:
-                x1 = int(row[0]*x_shape)
-                y1 = int(row[1]*y_shape)
-                x2 = int(row[2]*x_shape)
-                y2 = int(row[3]*y_shape)
-                bgr = (0,255,0)
-                cv.rectangle(frame, (x1,y1), (x2,y2), bgr, 2)
-                cv.putText(frame, self.class_convert(labels[i]), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 0.9,(118, 185, 0))
+                x1 = int(row[0] * x_shape)
+                y1 = int(row[1] * y_shape)
+                x2 = int(row[2] * x_shape)
+                y2 = int(row[3] * y_shape)
+                bgr = (0, 255, 0)
+                cv.rectangle(frame, (x1, y1), (x2, y2), bgr, 2)
+                cv.putText(frame, self.class_convert(labels[i]), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 0.9, (118, 185, 0))
         return frame
+
     def __call__(self):
         img = self.get_img()
 
@@ -61,11 +67,10 @@ class GalaxyClassifier:
             img = self.draw(results, img)
             cv.imwrite("Detected.jpg", img)
 
-            if cv2.waitKey(5) & 0xFF ==27:
+            if cv2.waitKey(5) & 0xFF == 27:
                 break
 
 
 if __name__ == '__main__':
     galaxyClassifier = GalaxyClassifier(file_list='100090.jpg', weights='we.pt')
     galaxyClassifier()
-
