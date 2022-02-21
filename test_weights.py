@@ -79,5 +79,5 @@ class GalaxyClassifier:
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='we.pt', thresh=threshold)
+    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='Weights/TestWeights.pt', thresh=threshold)
     galaxyClassifier()
