@@ -5,13 +5,21 @@ import time
 import cv2 as cv
 import platform
 
+threshold = ""
+default_threshold = '0.25'
+
+if not threshold:
+    threshold = default_threshold
+    print("Default threshold active.")
+
 
 class GalaxyClassifier:
 
-    def __init__(self, file_list, weights):
+    def __init__(self, file_list, weights, thresh):
         self.file_list = file_list
         self.model = self.load_model(weights)
         self.classes = self.model.names
+        self.thresh = thresh
 
     def load_model(self, weights):
         # check device
@@ -42,14 +50,14 @@ class GalaxyClassifier:
     def class_convert(self, x):
         return self.classes[int(x)]
 
-    def draw(self, results, frame):
+    def draw(self, results, frame, thresh):
         labels, cord = results
         n = len(labels)
         x_shape = frame.shape[1]
         y_shape = frame.shape[0]
         for i in range(n):
             row = cord[i]
-            if row[4] >= 0.55:
+            if row[4] >= thresh:
                 print(row[4])
                 x1 = int(row[0] * x_shape)
                 y1 = int(row[1] * y_shape)
@@ -63,14 +71,13 @@ class GalaxyClassifier:
     def __call__(self):
         img = self.get_img()
 
-
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = self.score(img)
         img = self.draw(results, img)
-        cv.imwrite("Detectedrgb.jpg", img)
-
+        img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+        cv.imwrite("done.jpg", img)
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='we.pt')
+    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='we.pt', thresh=threshold)
     galaxyClassifier()
