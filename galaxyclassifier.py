@@ -50,7 +50,8 @@ class GalaxyClassifier:
     def class_convert(self, x):
         return self.classes[int(x)]
 
-    def draw(self, results, frame, thresh):
+    def draw(self, results, frame):
+        thresh=float(self.thresh)
         labels, cord = results
         n = len(labels)
         x_shape = frame.shape[1]
@@ -58,14 +59,14 @@ class GalaxyClassifier:
         for i in range(n):
             row = cord[i]
             if row[4] >= thresh:
-                print(row[4])
+                thresh_text = str(round(float(row[4]), 2))
                 x1 = int(row[0] * x_shape)
                 y1 = int(row[1] * y_shape)
                 x2 = int(row[2] * x_shape)
                 y2 = int(row[3] * y_shape)
                 bgr = (0, 255, 0)
                 cv.rectangle(frame, (x1, y1), (x2, y2), bgr, 2)
-                cv.putText(frame, self.class_convert(labels[i]), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 0.9, (118, 185, 0))
+                cv.putText(frame, (self.class_convert(labels[i]) + " " + thresh_text), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 1.5, (118, 185, 0))
         return frame
 
     def __call__(self):
@@ -75,9 +76,9 @@ class GalaxyClassifier:
         results = self.score(img)
         img = self.draw(results, img)
         img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-        cv.imwrite("done.jpg", img)
+        cv.imwrite("yolo.jpg", img)
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='Weights/TestWeights.pt', thresh=threshold)
+    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='Weights/yolov5s.pt', thresh=threshold)
     galaxyClassifier()
