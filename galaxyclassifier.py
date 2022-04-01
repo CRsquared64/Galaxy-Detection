@@ -60,13 +60,14 @@ class GalaxyClassifier:
             row = cord[i]
             if row[4] >= thresh:
                 thresh_text = str(round(float(row[4]), 2))
+                print(f"Detected galaxy with confidence {thresh_text}: {self.class_convert(labels[i])} ")
                 x1 = int(row[0] * x_shape)
                 y1 = int(row[1] * y_shape)
                 x2 = int(row[2] * x_shape)
                 y2 = int(row[3] * y_shape)
                 bgr = (0, 255, 0)
                 cv.rectangle(frame, (x1, y1), (x2, y2), bgr, 2)
-                cv.putText(frame, (self.class_convert(labels[i]) + " " + thresh_text), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 1.5, (118, 185, 0))
+                cv.putText(frame, (self.class_convert(labels[i]) + " " + thresh_text), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 0.9, (118, 185, 0))
         return frame
 
     def __call__(self):
