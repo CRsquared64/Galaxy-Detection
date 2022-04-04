@@ -1,9 +1,10 @@
 import cv2
 import torch
 import numpy
-import time
+import datetime
 import cv2 as cv
 import platform
+import os
 
 threshold = ""
 default_threshold = '0.25'
@@ -33,13 +34,6 @@ class GalaxyClassifier:
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=weights, force_reload=True)
         return model
 
-    def get_img(self):
-        w = 412
-        h = 412
-        # reminder to self, put any modifications here Eg. stretch to 412
-
-        return cv2.imread(self.file_list)
-
     def score(self, frame):
         self.model.to(self.device)
         frame = [frame]
@@ -60,6 +54,7 @@ class GalaxyClassifier:
             row = cord[i]
             if row[4] >= thresh:
                 thresh_text = str(round(float(row[4]), 2))
+                print(f"[{datetime.datetime.now()}]: Detected [{self.class_convert(labels[i])}] with confidence {thresh_text}")
                 x1 = int(row[0] * x_shape)
                 y1 = int(row[1] * y_shape)
                 x2 = int(row[2] * x_shape)
@@ -70,15 +65,21 @@ class GalaxyClassifier:
         return frame
 
     def __call__(self):
-        img = self.get_img()
+        i = 0
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = self.score(img)
-        img = self.draw(results, img)
-        img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-        cv.imwrite("yolo.jpg", img)
+        for files in os.listdir(self.file_list):
+            with open(os.path.join(self.file_list, files), 'r') as f:
+                i = i + 1
+                img = cv2.imread(f)
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                results = self.score(img)
+                img = self.draw(results, img)
+                img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+                cv.imwrite(f"yolo{i}.jpg", img)
+
+
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='999622.jpg', weights='Weights/yolov5s.pt', thresh=threshold)
+    galaxyClassifier = GalaxyClassifier(file_list='Images', weights='Weights/yolov5s.pt', thresh=threshold, output_file='')
     galaxyClassifier()
