@@ -16,11 +16,17 @@ if not threshold:
 
 class GalaxyClassifier:
 
-    def __init__(self, file_list, weights, thresh):
+    def __init__(self, file_list, weights, thresh, output_file):
         self.file_list = file_list
         self.model = self.load_model(weights)
         self.classes = self.model.names
         self.thresh = thresh
+        self.output = output_file
+
+        if not os.path.exists(self.output):
+            os.makedirs(self.output)
+        else:
+            print(f"Directory {self.output} exists!")
 
     def load_model(self, weights):
         # check device
@@ -75,11 +81,11 @@ class GalaxyClassifier:
                 results = self.score(img)
                 img = self.draw(results, img)
                 img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-                cv.imwrite(f"yolo{i}.jpg", img)
+                cv.imwrite(f"{self.output}/yolo{i}.jpg", img)
 
 
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='Images', weights='Weights/yolov5s.pt', thresh=threshold, output_file='')
+    galaxyClassifier = GalaxyClassifier(file_list='Images', weights='Weights/yolov5s.pt', thresh=threshold, output_file='Midway')
     galaxyClassifier()
