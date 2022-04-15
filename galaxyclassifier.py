@@ -1,3 +1,5 @@
+import sys
+
 import cv2
 import torch
 import numpy
@@ -6,7 +8,12 @@ import cv2 as cv
 import platform
 import os
 
-threshold = ""
+file_list = sys.argv[1]
+output = sys.argv[2]
+weights = sys.argv[3]
+threshold = sys.argv[4]
+
+
 default_threshold = '0.25'
 
 if not threshold:
@@ -87,5 +94,5 @@ class GalaxyClassifier:
 
 
 if __name__ == '__main__':
-    galaxyClassifier = GalaxyClassifier(file_list='Images', weights='Weights/yolov5s.pt', thresh=threshold, output_file='Midway')
+    galaxyClassifier = GalaxyClassifier(file_list=file_list, weights=weights, thresh=threshold, output_file=output)
     galaxyClassifier()
