@@ -1,12 +1,13 @@
+import datetime
+import os
+import platform
 import sys
 
 import cv2
-import torch
-import numpy
-import datetime
 import cv2 as cv
-import platform
-import os
+import torch
+
+import colorama
 
 file_list = sys.argv[1]
 output = sys.argv[2]
@@ -85,6 +86,7 @@ class GalaxyClassifier:
                 i = i + 1
                 img = cv2.imread(f)
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                img = cv2.resize(img, (412,412))
                 results = self.score(img)
                 img = self.draw(results, img)
                 img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
